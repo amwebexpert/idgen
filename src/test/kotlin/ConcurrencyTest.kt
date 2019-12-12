@@ -6,8 +6,9 @@ class ConcurrencyTest {
 
 }
 
-fun main(args: Array<String>) {
-    val uri = "http://localhost:8080/api/v1/new-id/myNamespace"
+fun main() {
+    val uri = "http://localhost:8080/api/v1/new-id"
+    val namespaces = arrayListOf("MyNamespace1", "AnotherNamespace", "ThisOneIsSimpler", "NS")
     val restTemplate = RestTemplate()
 
     val threads = mutableSetOf<Thread>()
@@ -16,8 +17,16 @@ fun main(args: Array<String>) {
 
     for (i in 1..20) {
         val thread = thread(start = true) {
+            val namespace = namespaces.shuffled().first()
+            val url = "$uri/$namespace"
             val startedAt = System.currentTimeMillis()
-            val result = restTemplate.getForObject(uri, String::class.java)
+
+            val result = try {
+                restTemplate.getForObject(url, String::class.java)
+            } catch (e: Exception) {
+                // We could detect a 409 Conflict here and just retry
+                restTemplate.getForObject(url, String::class.java)
+            }
             val duration = System.currentTimeMillis() - startedAt
 
             sb.append("${Thread.currentThread()} Result: $result. Took $duration ms \n")

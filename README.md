@@ -11,49 +11,35 @@ REST Backend API for identifiers generation within namespaces
 
 ## Setup instructions
 
-The project is Maven based and uses Maven Wrapper (https://github.com/takari/maven-wrapper).
+Since the project is Maven based and uses Maven Wrapper (https://github.com/takari/maven-wrapper) there is no need to install any tooling and the build
+process only require a JDK to be available at command line. The final package is a runnable JAR and will serve the REST application at localhost:8080.
 
-### Build from the commandline
-To produce the 
-    ./mvnw clean install
-    
-This will 
+| Command                               | Comments               |
+|---------------------------------------|------------------------|
+| ./mvnw clean install                  | Build from the commandline. This generate the `idgen-0-SNAPSHOT.jar` runnable jar into `target/` folder |
+| java -jar target/idgen-0-SNAPSHOT.jar | Run application from the commandline. This starts the Spring Boot application ready to serve requests at localhost:8080 |
+| ./deploy-local.sh                     | Convenient script to build and launch locally. This also starts the Spring Boot application ready to serve requests at localhost:8080 |
 
-###### Intellij & Kotlin setup
 
-Right-click Project > Open module settings > Modules > Dependencies > Module SDK
+### Intellij & Kotlin setup
 
-* Then add the kotlin SDK
-
-## Commands
-
-###### Build jar and launch locally:
-
-    ./deploy-local.sh
-
-###### Launch main class from Intelli-J: 
-
-    JournalisationApplication
+* Right-click Project > Open module settings > Modules > Dependencies > Module SDK, Then add the kotlin SDK
+* Launch main class from Intelli-J: `com.amwebexpert.idgen.Application`
 
 ## Welcome page listing other URLs:
 
-- http://localhost:8080/index.html
+| URL                                   | Description               |
+|---------------------------------------|---------------------------|
+| http://localhost:8080                 | Welcome page |
+| http://localhost:8080/index.html      | Welcome page |
+| http://localhost:8080/swagger-ui.html | Swagger is really easy to integrate with SpringBoot and useful for documenting and testing REST APIs |
+| http://localhost:8080/h2-console      | The H2 console is the tool to view and query persisted data using browser. See notes below for login.|
 
-## Sagger API
-
-Swagger is really easy to integrate with SpringBoot and useful for documenting and testing REST APIs
-
-- http://localhost:8080/swagger-ui.html
-
-## H2 Console
-
-The H2 console is the tool to view and query persisted data using browser:
-
-- http://localhost:8080/h2-console
+Note for H2 console login:
 
 | Info     | Value               |
 |----------|---------------------|
-| URL      | jdbc:h2:mem:testdb  |
+| Jdbc URL | jdbc:h2:mem:testdb  |
 | Username | sa                  |
 | Password | [leave blank]       |
 

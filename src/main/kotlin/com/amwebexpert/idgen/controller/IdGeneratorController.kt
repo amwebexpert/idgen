@@ -2,6 +2,7 @@ package com.amwebexpert.idgen.controller
 
 import com.amwebexpert.idgen.service.IdGeneratorService
 import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1")
-@Api(tags = ["idgen"])
+@Api(tags = ["idgen"], description = "Controller for identifiers generation")
 class IdGeneratorController(private val service: IdGeneratorService) {
 
     companion object {
@@ -21,6 +22,7 @@ class IdGeneratorController(private val service: IdGeneratorService) {
     }
 
     @RequestMapping(value = ["new-id/{namespaceName}"], method = [RequestMethod.GET])
+    @ApiOperation(value = "new-id", notes = "Generates a brand new identifier within the specified namespace")
     fun generate(@PathVariable namespaceName: String): ResponseEntity<String> {
         val namespace = service.generateID(namespaceName)
         val id = namespace.fullyQualifiedIdentifier()

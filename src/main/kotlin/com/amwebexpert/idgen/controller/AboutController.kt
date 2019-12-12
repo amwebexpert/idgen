@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController
  * Optional: setup an about app info so we can ping our REST api
  */
 @RestController
-@RequestMapping("/api")
-@Api(tags = ["idgen"])
+@RequestMapping("/api/v1")
+@Api(tags = ["idgen-about"], description = "Controller for REST application version details")
 class AboutController(private val moduleVersionHelper: ModuleVersionHelper) {
 
     companion object {
@@ -24,7 +24,7 @@ class AboutController(private val moduleVersionHelper: ModuleVersionHelper) {
     }
 
     @GetMapping(value = ["/about"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    @ApiOperation(value = "about", notes = "Return detail regarding this REST application")
+    @ApiOperation(value = "about", notes = "Return REST application version details")
     fun about(): ResponseEntity<AboutInfo> {
         val info = moduleVersionHelper.getAboutInfo("idgen")
         LOGGER.info("ModuleVersion ${info.revision}")

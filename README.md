@@ -79,13 +79,14 @@ HashMap approach even for only one JVM scenario)
 
 ## Directions for future work
 
-* Scaling the application
-    * should be as simple as deploying more instances of the application and configuring load balancing stuff depending on the target cloud platform
-    * a single database instance would be enough for multiple app instances
+* It would probably be more appropriate to use POST verb and return HTTP 201 (as opposed to GET and HTTP 200)
 * My first though was to make usage of UUID (instead of long datatype) in case we would like to expose APIs like 
 namespace maintenance (CRUD operations). However performance would then be affected since 
 UUID generation is slower than integers generation, so not sure I would go the UUID way, see 
 discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids-for-resources-in-my-public-api.
+* Scaling the application
+    * should be as simple as deploying more instances of the application and configuring load balancing stuff depending on the target cloud platform
+    * a single database instance would be enough for multiple app instances
 
 
 ##### Note regarding H2:

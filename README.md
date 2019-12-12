@@ -39,18 +39,19 @@ have been sufficient. However I decided to use JPA with hibernate involving 2 li
 
 Pros:
 
-    - Usage of the ID generation mechanism (no code)
-    - Database constraints protect unicity for namespace and identifiers
-    - An HashMap (or any other memory) is transient and does not survive server reboot as opposed to a small database
-    - Easy to scale the service by X orders of magnitude more traffic by having multiple service instances and/or JVM that would still guarantee unicity (all pointing to the single DB server instance)
-    - JPA Repositories are easy to write here by using interfaces convention (no code)
-    - By using @Transactional annotation we are protected from concurency (simple optimistic locking by default) when multiple threads try to create same namespace twice
+* Usage of the ID generation mechanism (no code)
+* Database constraints protect unicity for namespace and identifiers
+* An HashMap (or any other memory) is transient and does not survive server reboot as
+opposed to a small database
+* Easy to scale the service by X orders of magnitude more traffic by having multiple service instances and/or JVM that would still guarantee unicity (all pointing to the single DB server instance)
+* JPA Repositories are easy to write here by using interfaces convention (no code)
+* By using @Transactional annotation we are protected from concurrency (simple optimistic locking by default) when multiple threads are trying to create same namespace twice
+* No need to set synchronized method in order to protect namespace creation collisions (which would be required with the HashMap approach even for only one JVM scenario)
 
 Cons:
 
-    - Memory usage if increased because we are using JPA, hibernate, transaction wrappers, etc.
-    - Slowler than a pure in-memory solution (HashMap or any memory structure) 
-    - More code and configurations to write for the JPA / H2 / Hibernate, although Spring Boot simplify this process
+* Memory usage if increased because we are using JPA, hibernate, transaction wrappers, etc.
+* Slower than a pure in-memory solution (HashMap or any memory structure) 
+* More code and configurations to write for the JPA / H2 / Hibernate, although Spring Boot simplify this process
 
-Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to startup with. The idea is to generate unique IDs even if
-multiple instances of service or multiple instances of JVM run concurrently 
+Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to startup with.

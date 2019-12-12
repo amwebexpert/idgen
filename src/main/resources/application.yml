@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 spring:
   h2:
     console:
@@ -10,15 +11,6 @@ spring:
     hibernate:
       ddl-auto: create
       generate-ddl: true
-    properties:
-      hibernate:
-        default_schema:
-          ${schema.name}
-  main:
-    allow-bean-definition-overriding: true
-  security:
-    user:
-      password: testpassword
 
 logging:
   level:

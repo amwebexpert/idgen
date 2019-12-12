@@ -1,0 +1,3 @@
+idgen-revision: [revision-development-mode]
+idgen-buildTimestamp: [buildTimestamp-development-mode]
+idgen-finalName: [finalName-development-mode]

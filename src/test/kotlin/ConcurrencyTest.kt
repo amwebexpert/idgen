@@ -1,11 +1,6 @@
 import org.springframework.web.client.RestTemplate
 import kotlin.concurrent.thread
 
-
-class ConcurrencyTest {
-
-}
-
 fun main() {
     val uri = "http://localhost:8080/api/v1/new-id"
     val namespaces = arrayListOf("MyNamespace1", "AnotherNamespace", "ThisOneIsSimpler", "NS")

@@ -79,6 +79,8 @@ HashMap approach even for only one JVM scenario)
 
 ## Directions for future work
 
+* ConcurrencyTestKt (src/test/kotlin) is a concurrency test starting 20 parallel requests: it shows that average REST call
+duration is around 80 ms. Any architecture or decisions changes may affect this kind of tests and give hints on impacts
 * Add exception handlers for returning right HTTP 4xx and 5xx codes. For instance 409 Conflict special return code for
 DataIntegrityViolationException (a call attempt to re-create existing namespace is just throwing exception right now)
 * Add validations for the namespace (let's say we do not want weird characters)

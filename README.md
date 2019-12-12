@@ -12,9 +12,9 @@ Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Mod
 
     ./deploy-local.sh
 
-###### Launch from Intelli-J: 
+###### Launch main class from Intelli-J: 
 
-    - Main class: `JournalisationApplication`
+    JournalisationApplication
 
 ## Welcome page listing other URLs:
 
@@ -22,9 +22,22 @@ Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Mod
 
 ## Sagger API
 
-Swagger is really easy to integrate with SpringBoot and useful for documenting and testing REST.
+Swagger is really easy to integrate with SpringBoot and useful for documenting and testing REST APIs
 
     http://localhost:8080/swagger-ui.html
+
+## H2 Console
+
+The H2 console is the tool to view and query persisted data using browser:
+
+    http://localhost:8080/h2-console
+
+| Info     | Value               |
+|----------|---------------------|
+| URL      | jdbc:h2:mem:testdb  |
+| Username | sa                  |
+| Password | [leave blank]       |
+
 
 ## REST API best practices
 - https://www.baeldung.com/rest-api-pagination-in-spring

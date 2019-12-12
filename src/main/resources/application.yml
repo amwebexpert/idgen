@@ -15,8 +15,8 @@ spring:
 logging:
   level:
     root: INFO
-    org.springframework.security: ERROR
     org.springframework: INFO
+    org.springframework.web.client.RestTemplate: WARN
     org.springframework.web.filter.CommonsRequestLoggingFilter: WARN
     org.hibernate.validator.internal.engine.ValidatorImpl: WARN
     org.hibernate.type.descriptor.sql: WARN

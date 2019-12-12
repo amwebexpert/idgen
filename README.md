@@ -46,24 +46,44 @@ Note for H2 console login:
 ## Explanation of any key tradeoffs made in this approach 
 
 The database was not required because for the small requirements a little in-memory HashMap (namespace as key and collection of IDs as value) would
-have been sufficient. However I decided to use JPA with hibernate involving 2 little tables (namespace having a 1 to many relationship with identifiers)
+have been sufficient. However I decided to use JPA involving 2 little tables (namespace having a 1 to many relationship with identifiers). Since H2 is
+an in-memory database it delivers fast input/output and allows the offline storage if ever required (so best of both worlds in my opinion)
+
+When looking at the final H2 solution we can see that:
+* repositories a just interfaces
+* code base is yet simple, in terms of Controller - Service - Repository
+* code is easy to understand and maintain
+* domain objects are mostly annotations
 
 #### Pros:
 
-* Usage of the ID generation mechanism (no code)
-* Database constraints protect unicity for namespace and identifiers
-* An HashMap (or any other memory) is transient and does not survive server reboot as
-opposed to a small database
-* Easy to scale the service by X orders of magnitude more traffic by having multiple service instances and/or JVM that would still guarantee unicity (all pointing to the single DB server instance)
+* Usage of the JPA ID generation mechanism (no code)
+* Database unique constraints protection for namespace and identifiers
+* An HashMap (or any other memory structure) is transient and does not survive server reboot as opposed to a small database
+* Easy to scale the service by X orders of magnitude more traffic by having multiple service instances and/or JVM that would still 
+guarantee unique constraint (all pointing to the single DB server instance)
 * JPA Repositories are easy to write here by using interfaces convention (no code)
-* By using @Transactional annotation we are protected from concurrency (simple optimistic locking by default) when multiple threads are trying to create same namespace twice
-* No need to set synchronized method in order to protect namespace creation collisions (which would be required with the HashMap approach even for only one JVM scenario)
+* By using @Transactional annotation we are protected from concurrency (simple optimistic locking by default) when multiple threads are 
+trying to create same namespace twice
+* No need to set synchronized method in order to protect namespace creation collisions (which would be required with the 
+HashMap approach even for only one JVM scenario)
 
 #### Cons:
 
-* Memory usage if increased because we are using JPA, hibernate, transaction wrappers, etc.
-* Slower than a pure in-memory solution (HashMap or any memory structure) 
-* More code and configurations to write for the JPA / H2 / Hibernate, although Spring Boot simplify this process
+* Memory usage if increased because we are using JPA, H2, hibernate, transaction wrappers
+* Slower than a plain old in-memory solution (HashMap or any memory structure)
+* Repositories and configurations to write for the JPA / H2, although Spring Boot simplify this process.
+
+## Directions for future work
+
+* Scaling the application
+    * should be as simple as deploying more instances of the application and configuring load balancing stuff depending on the target cloud platform
+    * a single database instance would be enough for multiple app instances
+* My first though was to make usage of UUID (instead of long datatype) in case we would like to expose APIs like 
+namespace maintenance (CRUD operations). However performance would then be affected since 
+UUID generation is slower than integers generation, so not sure I would go the UUID way, see 
+discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids-for-resources-in-my-public-api.
+
 
 ##### Note regarding H2:
 

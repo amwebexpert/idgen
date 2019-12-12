@@ -87,8 +87,8 @@ discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids
 
 ##### Note regarding H2:
 
-Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to startup with.
-The H2 Setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of configuration as explained here:
-http://www.h2database.com/html/cheatSheet.html
+Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to startup with and has the
+in-memory built-in capability. Actual H2 setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of 
+configuration as explained here: http://www.h2database.com/html/cheatSheet.html.
 So even with H2 we can persist the database content and survive server reboot. There exists also a server mode to
 simulate a real instance of a shared database instance for multiple REST service instances.

@@ -9,7 +9,6 @@ import javax.servlet.ServletException
 @Component
 class PersistenceH2ConsoleExposer : WebApplicationInitializer {
 
-    @Throws(ServletException::class)
     override fun onStartup(servletContext: ServletContext) {
         val servlet = servletContext.addServlet("h2-console", WebServlet())
 

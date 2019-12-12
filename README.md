@@ -1,8 +1,10 @@
 # idgen Backend
 
-## Intellij & Kotlin
+## Intellij & Kotlin setup
 
-Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Module SDK : ==> ADD the SDK kotlin.
+Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Module SDK
+
+- Then add the kotlin SDK
 
 ## Commands
 
@@ -14,9 +16,9 @@ Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Mod
 
     - Main class: `JournalisationApplication`
 
-## Url de l'application
+## Welcome page listing other URLs:
 
-    http://localhost:8080/index-backend.html
+    http://localhost:8080/index.html
 
 ## Sagger API
 
@@ -30,5 +32,5 @@ Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Mod
 
 ## Database
 
-Actually the database is H2 but could be Postgresql or anything else. The idea is to generate unique IDs even if
+Actually the database is H2 but could be PostgreSQL or anything else. The idea is to generate unique IDs even if
 multiple instances of service or multiple instances of JVM run concurrently (assuming we would have one DB server well know by services)

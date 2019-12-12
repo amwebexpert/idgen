@@ -14,6 +14,7 @@ data class NamespaceIdentifier(
         @JoinColumn(name = "namespace", nullable = false)
         var namespace: Namespace
 ) {
+
     fun fullyQualifiedIdentifier() = "${namespace.name}-$id"
     override fun toString(): String = "$id - ${fullyQualifiedIdentifier()}"
 

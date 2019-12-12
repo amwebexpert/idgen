@@ -20,10 +20,14 @@ process only require a JDK to be available at command line. The final package is
 | java -jar target/idgen-0-SNAPSHOT.jar | Run application from the commandline. This starts the Spring Boot application ready to serve requests at localhost:8080 |
 | ./deploy-local.sh                     | Convenient script to build and launch locally. This also starts the Spring Boot application ready to serve requests at localhost:8080 |
 
-### Intellij & Kotlin setup
+### IntelliJ & Kotlin setup
 
 * Right-click Project > Open module settings > Modules > Dependencies > Module SDK, Then add the kotlin SDK
 * Launch main class from Intelli-J: `com.amwebexpert.idgen.Application`
+
+### Eclipse & Kotlin setup
+I'm an IntelliJ fan so I've not integrated Eclipse + Kotlin so far... so here are the instructions:
+* https://kotlinlang.org/docs/tutorials/getting-started-eclipse.html
 
 ## Welcome page listing other URLs:
 

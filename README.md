@@ -48,7 +48,7 @@ Note for H2 console login:
 The database was not required because for the small requirements a little in-memory HashMap (namespace as key and collection of IDs as value) would
 have been sufficient. However I decided to use JPA with hibernate involving 2 little tables (namespace having a 1 to many relationship with identifiers)
 
-Pros:
+#### Pros:
 
 * Usage of the ID generation mechanism (no code)
 * Database constraints protect unicity for namespace and identifiers
@@ -59,10 +59,16 @@ opposed to a small database
 * By using @Transactional annotation we are protected from concurrency (simple optimistic locking by default) when multiple threads are trying to create same namespace twice
 * No need to set synchronized method in order to protect namespace creation collisions (which would be required with the HashMap approach even for only one JVM scenario)
 
-Cons:
+#### Cons:
 
 * Memory usage if increased because we are using JPA, hibernate, transaction wrappers, etc.
 * Slower than a pure in-memory solution (HashMap or any memory structure) 
 * More code and configurations to write for the JPA / H2 / Hibernate, although Spring Boot simplify this process
 
+##### Note regarding H2:
+
 Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to startup with.
+The H2 Setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of configuration as explained here:
+http://www.h2database.com/html/cheatSheet.html
+So even with H2 we can persist the database content and survive server reboot. There exists also a server mode to
+simulate a real instance of a shared database instance for multiple REST service instances.

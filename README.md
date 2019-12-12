@@ -1,10 +1,29 @@
-# idgen Backend
+# Namespace id generator
 
-## Intellij & Kotlin setup
+REST Backend API for identifiers generation within namespaces
 
-Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Module SDK
+## Technologies
+* Kotlin language
+* Spring Boot
+* Spring Data JPA
+* Swagger (API doc)
+* H2
 
-- Then add the kotlin SDK
+## Setup instructions
+
+The project is Maven based and uses Maven Wrapper (https://github.com/takari/maven-wrapper).
+
+### Build from the commandline
+To produce the 
+    ./mvnw clean install
+    
+This will 
+
+###### Intellij & Kotlin setup
+
+Right-click Project > Open module settings > Modules > Dependencies > Module SDK
+
+* Then add the kotlin SDK
 
 ## Commands
 

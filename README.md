@@ -18,32 +18,25 @@ Right-click Projet (or F4) > Open module settings > Modules > Dependencies > Mod
 
 ## Welcome page listing other URLs:
 
-    http://localhost:8080/index.html
+- http://localhost:8080/index.html
 
 ## Sagger API
 
 Swagger is really easy to integrate with SpringBoot and useful for documenting and testing REST APIs
 
-    http://localhost:8080/swagger-ui.html
+- http://localhost:8080/swagger-ui.html
 
 ## H2 Console
 
 The H2 console is the tool to view and query persisted data using browser:
 
-    http://localhost:8080/h2-console
+- http://localhost:8080/h2-console
 
 | Info     | Value               |
 |----------|---------------------|
 | URL      | jdbc:h2:mem:testdb  |
 | Username | sa                  |
 | Password | [leave blank]       |
-
-
-## REST API best practices
-- https://www.baeldung.com/rest-api-pagination-in-spring
-- https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-- https://hackernoon.com/restful-api-designing-guidelines-the-best-practices-60e1d954e7c9
-- https://swagger.io/blog/api-design/api-design-best-practices/
 
 ## Explanation of any key tradeoffs made in this approach 
 

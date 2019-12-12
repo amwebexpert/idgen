@@ -4,8 +4,10 @@ import org.h2.server.web.WebServlet
 import org.springframework.stereotype.Component
 import org.springframework.web.WebApplicationInitializer
 import javax.servlet.ServletContext
-import javax.servlet.ServletException
 
+/**
+ * Optional: setup the h2-console
+ */
 @Component
 class PersistenceH2ConsoleExposer : WebApplicationInitializer {
 

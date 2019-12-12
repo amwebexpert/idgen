@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * Optional: setup an about app info so we can ping our REST api
+ */
 @RestController
 @RequestMapping("/api")
 @Api(tags = ["idgen"])

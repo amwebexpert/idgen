@@ -20,7 +20,6 @@ process only require a JDK to be available at command line. The final package is
 | java -jar target/idgen-0-SNAPSHOT.jar | Run application from the commandline. This starts the Spring Boot application ready to serve requests at localhost:8080 |
 | ./deploy-local.sh                     | Convenient script to build and launch locally. This also starts the Spring Boot application ready to serve requests at localhost:8080 |
 
-
 ### Intellij & Kotlin setup
 
 * Right-click Project > Open module settings > Modules > Dependencies > Module SDK, Then add the kotlin SDK

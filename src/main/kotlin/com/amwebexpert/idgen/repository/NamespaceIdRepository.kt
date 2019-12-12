@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface NamespaceIdRepository : JpaRepository<NamespaceIdentifier, Long> {
 
+    // Optional, for testing purpose
     fun findAllByNamespace(namespace: String): NamespaceIdentifier
 
 }

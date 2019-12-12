@@ -13,6 +13,9 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
 
+/**
+ * Optional: setup the Swagger-UI (would do that only on non-PROD instances)
+ */
 @Configuration
 @EnableSwagger2
 class SwaggerConfig {

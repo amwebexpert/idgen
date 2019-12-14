@@ -1,4 +1,4 @@
-package com.amwebexpert.idgen.domain
+package com.amwebexpert.idgen.dto
 
 /**
  * @see com.amwebexpert.idgen.controller.AboutController

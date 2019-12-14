@@ -1,6 +1,6 @@
 package com.amwebexpert.idgen.utils
 
-import com.amwebexpert.idgen.domain.AboutInfo
+import com.amwebexpert.idgen.dto.AboutInfo
 import com.jcabi.manifests.Manifests
 import org.springframework.stereotype.Component
 

@@ -1,6 +1,6 @@
 package com.amwebexpert.idgen.controller
 
-import com.amwebexpert.idgen.domain.AboutInfo
+import com.amwebexpert.idgen.dto.AboutInfo
 import com.amwebexpert.idgen.utils.ModuleVersionHelper
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation

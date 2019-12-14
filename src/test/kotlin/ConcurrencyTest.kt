@@ -1,3 +1,4 @@
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import kotlin.concurrent.thread
 
@@ -23,8 +24,7 @@ fun main() {
 
             val result = try {
                 restTemplate.getForObject(url, String::class.java)
-            } catch (e: Exception) {
-                // We could detect a 409 Conflict here and just retry
+            } catch (e: HttpClientErrorException.Conflict) { // Catch HTTP 409 Conflicts and just retry
                 restTemplate.getForObject(url, String::class.java)
             }
             val duration = System.currentTimeMillis() - startedAt

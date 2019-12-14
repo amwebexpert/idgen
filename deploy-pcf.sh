@@ -1,4 +1,5 @@
 ./mvnw clean install
+# cf login -a https://api.run.pivotal.io
 cf push idgen -p target/idgen-0-SNAPSHOT.jar
 # cf logs idgen
 

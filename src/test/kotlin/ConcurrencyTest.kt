@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
  */
 fun main() {
     //val uri = "http://localhost:8080/api/v1/new-id-mem"
-    val uri = "https://idgen.cfapps.io/api/v1/new-id-mem"
+    val uri = "https://idgen.cfapps.io/api/v1/new-id"
     val namespaces = arrayListOf("MyNamespace1", "AnotherNamespace", "ThisOneIsSimpler", "NS")
     val restTemplate = RestTemplate()
 

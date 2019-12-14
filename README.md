@@ -58,13 +58,13 @@ When looking at the final H2 solution we can see that:
 * code is easy to understand and maintain
 * domain objects are mostly annotations
 * with added memory cache (ehcache) we can improve performances as we avoid JPA calls to determine if namespace does exist (see @Cacheable annotation on IdGeneratorService)
-* 
 
 #### Pros:
 
+* An HashMap (or any other memory structure) is transient and does not survive server reboot as opposed to a small database
+* Database can be useful to store other information like namespace creation time, identifier creation time, user-agent, ip address...
 * Usage of the JPA ID generation mechanism (no code)
 * Database unique constraints protection for namespace and identifiers
-* An HashMap (or any other memory structure) is transient and does not survive server reboot as opposed to a small database
 * Easy to scale the service by X orders of magnitude more traffic by having multiple service instances and/or JVM that would still 
 guarantee unique constraint (all pointing to the single DB server instance)
 * JPA Repositories are easy to write here by using interfaces convention (no code)
@@ -92,15 +92,35 @@ DataIntegrityViolationException (when concurrent calls try to create the same na
 namespace maintenance (CRUD operations). However performance would then be affected since 
 UUID generation is slower than integers generation, so, not sure I would go the UUID way, see 
 discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids-for-resources-in-my-public-api.
-* Scaling the application
-    * should be as simple as deploying more instances of the application and configuring load balancing stuff depending on the target cloud platform
-    * a single database instance would be enough for multiple app instances
-
 
 ##### Note regarding H2:
 
-Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to start up with and has the
-in-memory built-in capability. Actual H2 setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of 
-configuration as explained here: http://www.h2database.com/html/cheatSheet.html.
-So even with H2 we can persist the database content and survive server reboot. There exists also a server mode to
+* Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to start up with and has the
+in-memory built-in capability. 
+* Actual H2 setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of 
+configuration as explained here: http://www.h2database.com/html/cheatSheet.html. The only requirement is a disk space.
+* So even with H2 we can persist the database content and survive server reboot. There exists also a server mode to
 simulate a real instance of a shared database instance for multiple REST service instances.
+* Note that if we want the numeric part to restart at 1 each time a new namespace is created it would possible by simply creating
+new dedicated DB sequence at namespace creation time
+
+##### Note regarding scaling:
+
+* For 1 deployed instance (https://idgen.cfapps.io/) I tested that H2 approach can execute more than 50 concurrent requests in 1 second.
+Just ask me for tests since I'm billed by server usage :-) I can also demonstrate the full test process usage.
+* For more than one application instances, we would need to:
+    * use the H2 Server mode (instead of In-memory mode)
+    * dedicate a server instance as the H2 server instance and allow TCP communication at a dedicated port on that instance
+    * any additional instance should point to that TCP+port. For instance: jdbc:h2:tcp://idgen.cfapps.io:8084/~/sample
+
+##### References
+
+- https://help.talend.com/reader/ZAKVeO5MqWsrKfPqGglBkg/X_YjOtoB2bAUr7JPptwkEg
+- https://stackoverflow.com/a/21672625/704681
+- https://www.baeldung.com/spring-boot-access-h2-database-multiple-apps
+- http://www.h2database.com/html/tutorial.html#using_server
+- http://www.h2database.com/html/features.html#database_url
+- https://www.h2database.com/html/commands.html#create_sequence
+- https://dba.stackexchange.com/a/126856/32720
+- Backup and restore: http://h2database.com/html/tutorial.html#upgrade_backup_restore
+- https://stackoverflow.com/a/21078872/704681

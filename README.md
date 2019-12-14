@@ -61,7 +61,7 @@ When looking at the final H2 solution we can see that:
 
 #### Pros:
 
-* An HashMap (or any other memory structure) is transient and does not survive server reboot as opposed to a small database
+* An HashMap (or any other memory structure) is transient and does not survive server reboot or crash as opposed to a small database
 * Database can be useful to store other information like namespace creation time, identifier creation time, user-agent, ip address...
 * Usage of the JPA ID generation mechanism (no code)
 * Database unique constraints protection for namespace and identifiers
@@ -92,8 +92,12 @@ DataIntegrityViolationException (when concurrent calls try to create the same na
 namespace maintenance (CRUD operations). However performance would then be affected since 
 UUID generation is slower than integers generation, so, not sure I would go the UUID way, see 
 discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids-for-resources-in-my-public-api.
+* Perhaps consider having a batch creation mode for client wanting to retrieve more than 1 generated identifier in 1 call, because this would improve both server and client with a minimum of data exchange. For
+instance:
+    * Request = `{ "namespace": "MyNamespace", "quantity": 20 }`
+    * Response = `{ "namespace": "MyNamespace", "first": 517, "last": 537 }`
 
-##### Note regarding H2:
+##### H2 considerations:
 
 * Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to start up with and has the
 in-memory built-in capability. 
@@ -104,14 +108,14 @@ simulate a real instance of a shared database instance for multiple REST service
 * Note that if we want the numeric part to restart at 1 each time a new namespace is created it would possible by simply creating
 new dedicated DB sequence at namespace creation time
 
-##### Note regarding scaling:
+##### Scaling considerations:
 
 * For 1 deployed instance (https://idgen.cfapps.io/) I tested that H2 approach can execute around 40 concurrent requests in 1 second.
 Just ask me for tests since I'm billed by server usage :-) I can also demonstrate the full test process usage.
 
 Some executions stats (ConcurrencyTest.kt targeting https://idgen.cfapps.io/)
 
-| Execution #  | Stats                                                      |
+| Exec#  | Stats                                                      |
 |--------------|------------------------------------------------------------|
 |     1        | 100 calls executed in: 2757 ms which means 27 ms per call  |
 |     2        | 100 calls executed in: 2047 ms which means 20 ms per call  |

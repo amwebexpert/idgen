@@ -12,12 +12,12 @@ REST Backend API for identifiers generation within namespaces
 ## Setup instructions
 
 Since the project is Maven based and uses Maven Wrapper (https://github.com/takari/maven-wrapper) there is no need to install any tooling and the build
-process only require a JDK to be available at command line. The final package is a runnable JAR and will serve the REST application at localhost:8080.
+process only requires a JDK to be available at command line. The final package is a runnable JAR and will serve the REST application at localhost:8080.
 
 | Command                               | Comments               |
 |---------------------------------------|------------------------|
-| ./mvnw clean install                  | Build from the commandline. This generate the `idgen-0-SNAPSHOT.jar` runnable jar into `target/` folder |
-| java -jar target/idgen-0-SNAPSHOT.jar | Run application from the commandline. This starts the Spring Boot application ready to serve requests at localhost:8080 |
+| ./mvnw clean install                  | Build from the command line. This generates the `idgen-0-SNAPSHOT.jar` runnable jar into `target/` folder |
+| java -jar target/idgen-0-SNAPSHOT.jar | Run application from the command line. This starts the Spring Boot application ready to serve requests at localhost:8080 |
 | ./deploy-local.sh                     | Convenient script to build and launch locally. This also starts the Spring Boot application ready to serve requests at localhost:8080 |
 
 ### IntelliJ & Kotlin setup
@@ -49,7 +49,7 @@ Note for H2 console login:
 ## Explanation of any key tradeoffs made in this approach 
 
 The database was not required because for the small requirements a little in-memory HashMap (namespace as key and collection of IDs as value) would
-have been sufficient. However I decided to use JPA involving 2 little tables (namespace having a 1 to many relationship with identifiers). Since H2 is
+have been sufficient. However, I decided to use JPA involving 2 little tables (namespace having a 1 to many relationships with identifiers). Since H2 is
 an in-memory database it delivers fast input/output and allows the offline storage if ever required (so best of both worlds in my opinion)
 
 When looking at the final H2 solution we can see that:
@@ -57,6 +57,8 @@ When looking at the final H2 solution we can see that:
 * code base is yet simple, in terms of Controller - Service - Repository
 * code is easy to understand and maintain
 * domain objects are mostly annotations
+* with added memory cache (ehcache) we can improve performances as we avoid JPA calls to determine if namespace does exist (see @Cacheable annotation on IdGeneratorService)
+* 
 
 #### Pros:
 
@@ -67,7 +69,7 @@ When looking at the final H2 solution we can see that:
 guarantee unique constraint (all pointing to the single DB server instance)
 * JPA Repositories are easy to write here by using interfaces convention (no code)
 * By using @Transactional annotation we are protected from concurrency (simple optimistic locking by default) when multiple threads are 
-trying to create same namespace twice
+trying to create the same namespace twice
 * No need to set synchronized method in order to protect namespace creation collisions (which would be required with the 
 HashMap approach even for only one JVM scenario)
 
@@ -75,19 +77,20 @@ HashMap approach even for only one JVM scenario)
 
 * Memory usage if increased because we are using JPA, H2, hibernate, transaction wrappers
 * Slower than a plain old in-memory solution (HashMap or any memory structure)
-* Repositories and configurations to write for the JPA / H2, although Spring Boot simplify this process.
+* Repositories and configurations to write for the JPA / H2, although Spring Boot simplifies this process.
 
 ## Directions for future work
 
-* ConcurrencyTestKt (src/test/kotlin) is a concurrency test starting 20 parallel requests: it shows that average REST call
-duration is around 80 ms. Any architecture or decisions changes may affect this kind of tests and give hints on impacts
+* ConcurrencyTestKt (src/test/kotlin) is a concurrency test starting 100 parallel requests: it shows that average REST call
+duration is around 17 ms with the H2 approach and 14 ms for the pure in-memory structure. Any architecture or decisions changes may 
+affect this kind of tests and give hints on impacts
 * Add exception handlers for returning right HTTP 4xx and 5xx codes. For instance 409 Conflict special return code for
-DataIntegrityViolationException (when concurrent calls try to create same namespace)
+DataIntegrityViolationException (when concurrent calls try to create the same namespace)
 * Add validations for the namespace (let's say we do not want weird characters)
 * It would probably be more appropriate to use POST verb and return HTTP 201 (as opposed to GET and HTTP 200)
-* My first though was to make usage of UUID (instead of long datatype) in case we would like to expose APIs like 
+* My first thought was to make usage of UUID (instead of long datatype) in case we would like to expose APIs like 
 namespace maintenance (CRUD operations). However performance would then be affected since 
-UUID generation is slower than integers generation, so not sure I would go the UUID way, see 
+UUID generation is slower than integers generation, so, not sure I would go the UUID way, see 
 discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids-for-resources-in-my-public-api.
 * Scaling the application
     * should be as simple as deploying more instances of the application and configuring load balancing stuff depending on the target cloud platform
@@ -96,7 +99,7 @@ discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids
 
 ##### Note regarding H2:
 
-Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to startup with and has the
+Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to start up with and has the
 in-memory built-in capability. Actual H2 setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of 
 configuration as explained here: http://www.h2database.com/html/cheatSheet.html.
 So even with H2 we can persist the database content and survive server reboot. There exists also a server mode to

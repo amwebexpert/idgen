@@ -4,7 +4,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.util.concurrent.ConcurrentHashMap
 
-
+/**
+ * Optional, but this pure in-memory volatile implementation allows to compare performances statistics with the H2 approach.
+ */
 @Service
 class IdGeneratorServicePureMemory() {
     companion object {

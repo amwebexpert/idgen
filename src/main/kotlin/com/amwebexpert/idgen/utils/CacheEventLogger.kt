@@ -4,6 +4,9 @@ import org.ehcache.event.CacheEvent
 import org.ehcache.event.CacheEventListener
 import org.slf4j.LoggerFactory
 
+/**
+ * Optional: allows to see cache in action from the server logs
+ */
 class CacheEventLogger : CacheEventListener<Object, Object> {
 
     companion object {

@@ -24,7 +24,7 @@ class IdGeneratorController(private val service: IdGeneratorService,
     }
 
     @RequestMapping(value = ["new-id/{namespaceName}"], method = [RequestMethod.GET])
-    @ApiOperation(value = "new-id", notes = "Generates a brand new identifier within the specified namespace")
+    @ApiOperation(value = "new-id", notes = "Generates a brand new identifier within the specified namespace. Using the H2 database approach.")
     fun generate(@PathVariable namespaceName: String): ResponseEntity<String> {
         val namespaceIdentifier = service.generateID(namespaceName)
         val id = namespaceIdentifier.toString()
@@ -34,7 +34,7 @@ class IdGeneratorController(private val service: IdGeneratorService,
     }
 
     @RequestMapping(value = ["new-id-mem/{namespaceName}"], method = [RequestMethod.GET])
-    @ApiOperation(value = "new-id-mem", notes = "Generates a brand new identifier within the specified namespace")
+    @ApiOperation(value = "new-id-mem", notes = "Generates a brand new identifier within the specified namespace. Using a pure volatile in-memory structure (ConcurrentHashMap).")
     fun generateMem(@PathVariable namespaceName: String): ResponseEntity<String> {
         return ResponseEntity(servicePureMemory.generateID(namespaceName), HttpStatus.OK)
     }

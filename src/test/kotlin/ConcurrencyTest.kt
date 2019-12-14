@@ -29,7 +29,7 @@ fun main() {
             }
             val duration = System.currentTimeMillis() - startedAt
 
-            sb.append("${Thread.currentThread()} Result: $result. Took $duration ms \n")
+            sb.append("${Thread.currentThread()} \t Call duration: $duration ms ==> $result \n")
             durations.add(duration)
         }
 
@@ -40,7 +40,7 @@ fun main() {
     threads.forEach { it.join() }
 
     // Compute some stats
-    val total = durations.reduce { x, y -> x + y }
+    val total = durations.reduce { accumulator, aDuration -> accumulator + aDuration }
     println("-".repeat(100))
     println(sb)
     println("Average REST call duration: ${total / threads.size}")

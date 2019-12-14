@@ -16,6 +16,7 @@ class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(RestResponseEntityExceptionHandler::class.java)
+        private const val NAMESPACE_NOT_FOUNT = "Namespace does not exists"
         private const val NAMESPACE_ALREADY_EXISTS = "Namespace already exists"
         private const val SERVER_ERROR = "Server error"
     }
@@ -23,6 +24,11 @@ class RestResponseEntityExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [DataIntegrityViolationException::class])
     protected fun handleDataIntegrityViolation(ex: RuntimeException, request: WebRequest): ResponseEntity<Any> {
         return handleExceptionInternal(ex, NAMESPACE_ALREADY_EXISTS, HttpHeaders(), HttpStatus.CONFLICT, request)
+    }
+
+    @ExceptionHandler(value = [NoSuchElementException::class])
+    protected fun handleNoSuchElementException(ex: RuntimeException, request: WebRequest): ResponseEntity<Any> {
+        return handleExceptionInternal(ex, NAMESPACE_NOT_FOUNT, HttpHeaders(), HttpStatus.NOT_FOUND, request)
     }
 
     @ExceptionHandler(value = [Exception::class])

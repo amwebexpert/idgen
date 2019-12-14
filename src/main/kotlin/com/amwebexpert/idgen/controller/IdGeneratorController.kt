@@ -24,8 +24,8 @@ class IdGeneratorController(private val service: IdGeneratorService) {
     @RequestMapping(value = ["new-id/{namespaceName}"], method = [RequestMethod.GET])
     @ApiOperation(value = "new-id", notes = "Generates a brand new identifier within the specified namespace")
     fun generate(@PathVariable namespaceName: String): ResponseEntity<String> {
-        val namespace = service.generateID(namespaceName)
-        val id = namespace.fullyQualifiedIdentifier()
+        val namespaceIdentifier = service.generateID(namespaceName)
+        val id = namespaceIdentifier.fullyQualifiedIdentifier()
 
         LOGGER.info("Returning generated id", id)
         return ResponseEntity(id, HttpStatus.OK)

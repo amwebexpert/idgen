@@ -1,5 +1,6 @@
 package com.amwebexpert.idgen.repository
 
+import com.amwebexpert.idgen.domain.Namespace
 import com.amwebexpert.idgen.domain.NamespaceIdentifier
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Repository
 interface NamespaceIdRepository : JpaRepository<NamespaceIdentifier, Long> {
 
     // Optional, for testing purpose
-    fun findAllByNamespace(namespace: String): NamespaceIdentifier
+    fun findAllByNamespace(namespace: Namespace): List<NamespaceIdentifier>
 
 }

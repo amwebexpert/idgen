@@ -21,26 +21,26 @@ class IdGeneratorService(
 
     @Transactional
     fun generateID(namespaceName: String): NamespaceIdentifier {
-        LOGGER.debug("Generating id within [${namespaceName}] namespace")
+        LOGGER.debug("Generating id within [{}] namespace", namespaceName)
 
         val namespace = getOrCreate(namespaceName)
         val namespaceIdentifier = namespaceIdRepository.save(NamespaceIdentifier(null, namespace))
         namespace.identifiers.add(namespaceIdentifier)
 
         LOGGER.debug("Generated element with internal id: {}", namespaceIdentifier.id)
-        return namespaceIdentifier;
+        return namespaceIdentifier
     }
 
     private fun getOrCreate(name: String): Namespace {
-        LOGGER.debug("Looking for [${name}] namespace")
+        LOGGER.debug("Looking for [{}] namespace", name)
         val namespace = namespaceRepository.findByName(name)
 
         if (namespace.isPresent) {
-            LOGGER.debug("Namespace [${name}] already exists: no need to create.")
+            LOGGER.debug("Namespace [{}] already exists: no need to create.", name)
             return namespace.get()
         }
 
-        LOGGER.debug("Generating [${name}] namespace")
+        LOGGER.debug("Generating [{}] namespace", name)
         return namespaceRepository.save(Namespace(null, name))
     }
 

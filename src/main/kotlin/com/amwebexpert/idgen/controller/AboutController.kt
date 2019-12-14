@@ -27,7 +27,7 @@ class AboutController(private val moduleVersionHelper: ModuleVersionHelper) {
     @ApiOperation(value = "about", notes = "Return REST application version details")
     fun about(): ResponseEntity<AboutInfo> {
         val info = moduleVersionHelper.getAboutInfo("idgen")
-        LOGGER.info("ModuleVersion ${info.revision}")
+        LOGGER.info("ModuleVersion {}", info.revision)
 
         return ResponseEntity.ok(info)
     }

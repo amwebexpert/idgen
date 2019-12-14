@@ -12,6 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ * Optional, just to test JPA repository.
+ *
+ * Notes:
+ * - Normally findAllXXXXX methods should return paged results (@see org.springframework.data.domain.Pageable) instead of
+ *   whole collections to avoid server memory issues
+ */
 
 @RestController
 @RequestMapping("/api/v1")

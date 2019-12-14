@@ -38,7 +38,7 @@ class QueriesController(
         val namespace = namespaceRepository.findByName(namespaceName).get()
         val values = namespace.identifiers
 
-        LOGGER.info("Returning values {}", values)
+        LOGGER.debug("Returning values {}", values)
         return ResponseEntity(values.toString(), HttpStatus.OK)
     }
 
@@ -48,7 +48,7 @@ class QueriesController(
         val namespace = namespaceRepository.findByName(namespaceName).get()
         val values = namespaceIdRepository.findAllByNamespace(namespace)
 
-        LOGGER.info("Returning values {}", values)
+        LOGGER.debug("Returning values {}", values)
         return ResponseEntity(values.toString(), HttpStatus.OK)
     }
 
@@ -57,7 +57,7 @@ class QueriesController(
     fun findNamespaceByName(@PathVariable namespaceName: String): ResponseEntity<String> {
         val namespace = namespaceRepository.findByName(namespaceName).get()
 
-        LOGGER.info("Returning namespace {}", namespace)
+        LOGGER.debug("Returning namespace {}", namespace)
         return ResponseEntity(namespace.name, HttpStatus.OK)
     }
 

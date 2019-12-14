@@ -27,7 +27,7 @@ class IdGeneratorController(private val service: IdGeneratorService) {
         val namespaceIdentifier = service.generateID(namespaceName)
         val id = namespaceIdentifier.fullyQualifiedIdentifier()
 
-        LOGGER.info("Returning generated id", id)
+        LOGGER.debug("Returning generated id", id)
         return ResponseEntity(id, HttpStatus.OK)
     }
 

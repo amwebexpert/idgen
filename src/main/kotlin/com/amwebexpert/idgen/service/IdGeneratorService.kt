@@ -5,6 +5,7 @@ import com.amwebexpert.idgen.domain.NamespaceIdentifier
 import com.amwebexpert.idgen.repository.NamespaceIdRepository
 import com.amwebexpert.idgen.repository.NamespaceRepository
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -31,7 +32,8 @@ class IdGeneratorService(
         return namespaceIdentifier
     }
 
-    private fun getOrCreate(name: String): Namespace {
+    @Cacheable("namespaces")
+    fun getOrCreate(name: String): Namespace {
         LOGGER.debug("Looking for [{}] namespace", name)
         val namespace = namespaceRepository.findByName(name)
 

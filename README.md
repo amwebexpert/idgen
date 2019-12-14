@@ -106,8 +106,20 @@ new dedicated DB sequence at namespace creation time
 
 ##### Note regarding scaling:
 
-* For 1 deployed instance (https://idgen.cfapps.io/) I tested that H2 approach can execute more than 50 concurrent requests in 1 second.
+* For 1 deployed instance (https://idgen.cfapps.io/) I tested that H2 approach can execute around 40 concurrent requests in 1 second.
 Just ask me for tests since I'm billed by server usage :-) I can also demonstrate the full test process usage.
+
+Some executions stats (ConcurrencyTest.kt targeting https://idgen.cfapps.io/)
+
+| Execution #  | Stats                                                      |
+|--------------|------------------------------------------------------------|
+|     1        | 100 calls executed in: 2757 ms which means 27 ms per call  |
+|     2        | 100 calls executed in: 2047 ms which means 20 ms per call  |
+|     3        | 100 calls executed in: 2992 ms which means 29 ms per call  |
+|     4        | 100 calls executed in: 2158 ms which means 21 ms per call  |
+|     5        | 100 calls executed in: 1414 ms which means 14 ms per call  |
+
+
 * For more than one application instances, we would need to:
     * use the H2 Server mode (instead of In-memory mode)
     * dedicate a server instance as the H2 server instance and allow TCP communication at a dedicated port on that instance

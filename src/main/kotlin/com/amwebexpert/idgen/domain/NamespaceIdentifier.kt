@@ -15,7 +15,6 @@ data class NamespaceIdentifier(
         var namespace: Namespace
 ) {
 
-    fun fullyQualifiedIdentifier() = "${namespace.name}-$id"
-    override fun toString(): String = "$id - ${fullyQualifiedIdentifier()}"
+    override fun toString(): String = "${namespace.name}-$id"
 
 }

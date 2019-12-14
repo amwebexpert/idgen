@@ -8,29 +8,30 @@ import kotlin.concurrent.thread
  * You must start the server before running this test :-)
  */
 fun main() {
-    val uri = "http://localhost:8080/api/v1/new-id"
+    //val uri = "http://localhost:8080/api/v1/new-id-mem"
+    val uri = "https://idgen.cfapps.io/api/v1/new-id-mem"
     val namespaces = arrayListOf("MyNamespace1", "AnotherNamespace", "ThisOneIsSimpler", "NS")
     val restTemplate = RestTemplate()
 
     val threads = mutableSetOf<Thread>()
     val sb = StringBuffer()
-    var durations = mutableListOf<Long>()
+    val fullTestStartedAt = System.currentTimeMillis()
 
-    for (i in 1..20) {
+    for (i in 1..100) {
         val thread = thread(start = true) {
             val namespace = namespaces.shuffled().first()
             val url = "$uri/$namespace"
-            val startedAt = System.currentTimeMillis()
 
+            val startedAt = System.currentTimeMillis()
             val result = try {
                 restTemplate.getForObject(url, String::class.java)
-            } catch (e: HttpClientErrorException.Conflict) { // Catch HTTP 409 Conflicts and just retry
+            } catch (e: HttpClientErrorException.Conflict) {
+                // Catch HTTP 409 Conflicts and just retry
                 restTemplate.getForObject(url, String::class.java)
             }
             val duration = System.currentTimeMillis() - startedAt
 
-            sb.append("${Thread.currentThread()} \t Call duration: $duration ms ==> $result \n")
-            durations.add(duration)
+            sb.append("${Thread.currentThread().name} \t Call duration: $duration ms ==> $result \n")
         }
 
         threads.add(thread)
@@ -40,9 +41,11 @@ fun main() {
     threads.forEach { it.join() }
 
     // Compute some stats
-    val total = durations.reduce { accumulator, aDuration -> accumulator + aDuration }
+    val totalTime = System.currentTimeMillis() - fullTestStartedAt
+    val threadsCount = threads.size
+
     println("-".repeat(100))
     println(sb)
-    println("Average REST call duration: ${total / threads.size}")
+    println("$threadsCount calls executed in: $totalTime ms which means ${totalTime / threadsCount} ms per call")
     println("-".repeat(100))
 }

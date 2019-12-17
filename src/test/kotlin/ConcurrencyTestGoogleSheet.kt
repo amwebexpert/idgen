@@ -1,5 +1,5 @@
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import java.net.URL
 import kotlin.concurrent.thread
 
 /**
@@ -8,8 +8,9 @@ import kotlin.concurrent.thread
  * You must start the server before running this test :-)
  */
 fun main() {
-    //val uri = "http://localhost:8080/api/v1/new-id-mem"
-    val uri = "https://idgen.cfapps.io/api/v1/new-id"
+    val uri = URL("https://script.google.com/macros/s/AKfycbwogqvd7ohy7iNheL_vynArlLlBfy2V8fySk0iPXNN3tJ0dgWM/exec")
+    // return url.openStream().reader().readText()
+
     val namespaces = arrayListOf("MyNamespace1", "AnotherNamespace", "ThisOneIsSimpler", "NS")
     val restTemplate = RestTemplate()
 
@@ -17,18 +18,13 @@ fun main() {
     val sb = StringBuffer()
     val fullTestStartedAt = System.currentTimeMillis()
 
-    for (i in 1..100) {
+    for (i in 1..10) { // More than 10 causes problems (even 10 is too much :-/)
         val thread = thread(start = true) {
             val namespace = namespaces.shuffled().first()
-            val url = "$uri/$namespace"
+            val url = "$uri?namespaceName=$namespace"
 
             val startedAt = System.currentTimeMillis()
-            val result = try {
-                restTemplate.getForObject(url, String::class.java)
-            } catch (e: HttpClientErrorException.Conflict) {
-                // Catch HTTP 409 Conflicts and just retry
-                restTemplate.getForObject(url, String::class.java)
-            }
+            val result = restTemplate.getForObject(url, String::class.java)
             val duration = System.currentTimeMillis() - startedAt
 
             sb.append("${Thread.currentThread().name} \t Call duration: $duration ms ==> $result \n")

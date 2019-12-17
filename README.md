@@ -84,15 +84,23 @@ HashMap approach even for only one JVM scenario)
 * ConcurrencyTestKt (src/test/kotlin) is a concurrency test starting 100 parallel requests: it shows that average REST call
 duration is around 17 ms with the H2 approach and 14 ms for the pure in-memory structure. Any architecture or decisions changes may 
 affect this kind of tests and give hints on impacts
-* Add exception handlers for returning right HTTP 4xx and 5xx codes. For instance 409 Conflict special return code for
-DataIntegrityViolationException (when concurrent calls try to create the same namespace)
-* Add validations for the namespace (let's say we do not want weird characters)
+* Note that if we want the numeric part to restart at 1 each time a new namespace is created it would possible by simply creating
+new dedicated DB sequence at namespace creation time
+* Add validations for the namespace (let's say we do not want weird characters, or we have to limit the length)
+* Consider using simpler DB structure which would be probably faster:
+    * No more NAMESPACE_IDENTIFIER table
+    * Only NAMESPACE table with columns ID, NAME
+    * Each time a new namespace is detected, we would then
+        * create a corresponding new sequence starting at 1 and having name NAMESPACE
+        * insure the sequence creation and the INSERT into the NAMESPACE are included within the same transaction
+    * All subsequent calls just execute sequence and return SEQUENCE_VALUE + "-" + NAMESPACE
+    * I think that executing a sequence would be faster than executing an INSERT into NAMESPACE_IDENTIFIER table when the namespace exists
 * It would probably be more appropriate to use POST verb and return HTTP 201 (as opposed to GET and HTTP 200)
 * My first thought was to make usage of UUID (instead of long datatype) in case we would like to expose APIs like 
-namespace maintenance (CRUD operations). However performance would then be affected since 
+namespace maintenance (CRUD operations). However, performance would then be affected since 
 UUID generation is slower than integers generation, so, not sure I would go the UUID way, see 
 discussions here: https://stackoverflow.com/questions/7114694/should-i-use-uuids-for-resources-in-my-public-api.
-* Perhaps consider having a batch creation mode for client wanting to retrieve more than 1 generated identifier in 1 call, because this would improve both server and client with a minimum of data exchange. For
+* Perhaps consider having a batch creation mode for the client wanting to retrieve more than 1 generated identifier in 1 call, because this would improve both server and client with a minimum of data exchange. For
 instance:
     * Request = `{ "namespace": "MyNamespace", "quantity": 20 }`
     * Response = `{ "namespace": "MyNamespace", "first": 517, "last": 537 }`
@@ -102,11 +110,9 @@ instance:
 * Actually the database is H2 but could be PostgreSQL or anything else. H2 is just very easy to start up with and has the
 in-memory built-in capability. 
 * Actual H2 setup (jdbc:h2:mem:testdb) does not survive server reboot, but it's a matter of 
-configuration as explained here: http://www.h2database.com/html/cheatSheet.html. The only requirement is a disk space.
+configuration as explained here: http://www.h2database.com/html/cheatSheet.html. The only requirement is disk space.
 * So even with H2 we can persist the database content and survive server reboot. There exists also a server mode to
 simulate a real instance of a shared database instance for multiple REST service instances.
-* Note that if we want the numeric part to restart at 1 each time a new namespace is created it would possible by simply creating
-new dedicated DB sequence at namespace creation time
 
 ##### Scaling considerations:
 
@@ -117,11 +123,11 @@ Some executions stats (ConcurrencyTest.kt targeting https://idgen.cfapps.io/)
 
 | Exec#  | Stats                                                      |
 |--------------|------------------------------------------------------------|
-|     1        | 100 calls executed in: 2757 ms which means 27 ms per call  |
-|     2        | 100 calls executed in: 2047 ms which means 20 ms per call  |
-|     3        | 100 calls executed in: 2992 ms which means 29 ms per call  |
-|     4        | 100 calls executed in: 2158 ms which means 21 ms per call  |
-|     5        | 100 calls executed in: 1414 ms which means 14 ms per call  |
+|     1        | 100 calls executed in 2757 ms which means 27 ms per call  |
+|     2        | 100 calls executed in 2047 ms which means 20 ms per call  |
+|     3        | 100 calls executed in 2992 ms which means 29 ms per call  |
+|     4        | 100 calls executed in 2158 ms which means 21 ms per call  |
+|     5        | 100 calls executed in 1414 ms which means 14 ms per call  |
 
 
 * For more than one application instances, we would need to:
@@ -129,7 +135,22 @@ Some executions stats (ConcurrencyTest.kt targeting https://idgen.cfapps.io/)
     * dedicate a server instance as the H2 server instance and allow TCP communication at a dedicated port on that instance
     * any additional instance should point to that TCP+port. For instance: jdbc:h2:tcp://idgen.cfapps.io:8084/~/sample
 
+##### HyperSQL DB considerations (2019-12-16):
+
+* Hsqldb would be a better choice (I made some tests and it's definitely faster)
+* Hsqldb is also preferable because it has a built-in HTTP protocol available on both client and server sides (as opposed to TCP protocol of H2) because
+most of cloud hosting solutions do not allow easily to configure free ports on TCP protocol
+
+
+###### Google Sheet considerations (2019-12-17):
+
+* See scripts under src/main/google-scripts/ folder
+* Was promising at first but the locking mechanism (LockService) provides poor performances
+* Google puts very high limitations on concurrent calls which makes this approach useless (https://developers.google.com/apps-script/guides/services/quotas)
+
 ##### References
+
+###### H2
 
 - https://help.talend.com/reader/ZAKVeO5MqWsrKfPqGglBkg/X_YjOtoB2bAUr7JPptwkEg
 - https://stackoverflow.com/a/21672625/704681
@@ -138,5 +159,18 @@ Some executions stats (ConcurrencyTest.kt targeting https://idgen.cfapps.io/)
 - http://www.h2database.com/html/features.html#database_url
 - https://www.h2database.com/html/commands.html#create_sequence
 - https://dba.stackexchange.com/a/126856/32720
-- Backup and restore: http://h2database.com/html/tutorial.html#upgrade_backup_restore
+- http://h2database.com/html/tutorial.html#upgrade_backup_restore
 - https://stackoverflow.com/a/21078872/704681
+
+###### HSQLDB
+
+- http://hsqldb.org/doc/2.0/guide/running-chapt.html#rgc_http_server
+- https://www.baeldung.com/spring-boot-hsqldb
+
+###### Google Sheet API
+
+- https://developers.google.com/apps-script/guides/web
+- https://developers.google.com/apps-script/reference/spreadsheet/range#setvaluevalue
+- https://developers.google.com/apps-script/reference/lock
+- https://developers.google.com/apps-script/reference/lock/lock.html
+

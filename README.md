@@ -95,6 +95,9 @@ new dedicated DB sequence at namespace creation time
         * insure the sequence creation and the INSERT into the NAMESPACE are included within the same transaction
     * All subsequent calls just execute sequence and return SEQUENCE_VALUE + "-" + NAMESPACE
     * I think that executing a sequence would be faster than executing an INSERT into NAMESPACE_IDENTIFIER table when the namespace exists
+* For better performances I would suggest not to use JPA but just plain old JDBC queries to avoid a couple of libraries layers. We could compare
+the NamespaceJdbcRepository performances stats to the existing JPA NamespaceRepository to see if it really matters. But that requires more code as
+JPA is doing a lot of free stuff for us (transactions handling with commit and rollback, resultset mappings, etc.)
 * It would probably be more appropriate to use POST verb and return HTTP 201 (as opposed to GET and HTTP 200)
 * My first thought was to make usage of UUID (instead of long datatype) in case we would like to expose APIs like 
 namespace maintenance (CRUD operations). However, performance would then be affected since 

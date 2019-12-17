@@ -169,6 +169,8 @@ most of cloud hosting solutions do not allow easily to configure free ports on T
 
 - http://hsqldb.org/doc/2.0/guide/running-chapt.html#rgc_http_server
 - https://www.baeldung.com/spring-boot-hsqldb
+- http://hsqldb.org/doc/2.0/guide/listeners-chapt.html#lsc_server_props
+
 
 ###### Google Sheet API
 

@@ -142,7 +142,7 @@ Some executions stats (ConcurrencyTest.kt targeting https://idgen.cfapps.io/)
 most of cloud hosting solutions do not allow easily to configure free ports on TCP protocol
 
 
-###### Google Sheet considerations (2019-12-17):
+##### Google Sheet considerations (2019-12-17):
 
 * See scripts under src/main/google-scripts/ folder
 * Was promising at first but the locking mechanism (LockService) provides poor performances

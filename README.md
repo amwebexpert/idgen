@@ -53,14 +53,20 @@ The app include a `Dockerfile` (not optimized).
 For optimizing the image and promote Docker layers, we can apply recommandations explained here:
 * https://www.baeldung.com/spring-boot-docker-images
 
-### Building image
+### Pulling latest image
 
-    docker build -t amwe/idgen .
+The latest version of the application has been pushed to https://hub.docker.com/ under the `amwe/idgen`.
+To pull the latest image then run the following command:
+
+    docker pull amwe/idgen
 
 ### Running the app inside a container
 
     docker run -p 8080:8080 -d amwe/idgen:latest
 
+### Building a new image
+
+    docker build -t amwe/idgen .
 
 ## Explanation of any key tradeoffs made in this approach 
 

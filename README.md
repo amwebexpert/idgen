@@ -8,6 +8,7 @@ REST Backend API for identifiers generation within namespaces
 * Spring Data JPA
 * Swagger (API doc)
 * H2
+* Docker
 
 ## Setup instructions
 
@@ -45,6 +46,21 @@ Note for H2 console login:
 | Jdbc URL | jdbc:h2:mem:testdb  |
 | Username | sa                  |
 | Password | [leave blank]       |
+
+## Docker
+
+The app include a `Dockerfile` (not optimized).
+For optimizing the image and promote Docker layers, we can apply recommandations explained here:
+* https://www.baeldung.com/spring-boot-docker-images
+
+### Building image
+
+    docker build -t amwe/idgen .
+
+### Running the app inside a container
+
+    docker run -p 8080:8080 -d amwe/idgen:latest
+
 
 ## Explanation of any key tradeoffs made in this approach 
 
